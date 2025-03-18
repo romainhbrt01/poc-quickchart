@@ -1,77 +1,75 @@
+sudo apt-get install libcairo2-dev
+you can modify your GitHub Actions workflow to include ```
+
+2. **Upgrade canvas module**: Consider upgrading the `canvas` module to a more recent version that the installation of system dependencies:
+
+```yaml might have pre-built binaries available for your Node
+name: Build and deploy Node.js app to Azure Web App.js version.
+
+### Steps to Update Workflow
+1. **Update the workflow file** to include the step to install `cairo` before running `npm install`.
+
+Here is an - poc-quickchart
+
+on:
+push:
+ branches:
+   updated version of your workflow file:
+
+```yaml
 name: Build and deploy Node.js app to Azure Web App - poc-quickchart
 
 on:
-  push:
-    branches:
-      - master
-  workflow_dispatch:
+push:
+ branches:
+   - main - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read #This is required for actions/checkout
+build:
+ runs-on: ubuntu-latest
+pull_request:
+ branches:
+   - main
 
-    steps:
-      - uses: actions/checkout@v4
+jobs:
 
-      - name: Set up Node.js version
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libcairo2 libpango-1.0-0 libjpeg-dev libgif-dev libpixman-1-dev
+ steps:
+ - uses: actions/checkout@v2
 
-      - name: npm install, build, and test
-        env:
-          NPM_CONFIG_LEGACY_PEER_DEPS: true
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+ -  build:
+ runs-on: ubuntu-latest
 
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+ steps:
+ name: Set up Node.js
+   uses: actions/setup-node - uses: actions/checkout@v2
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-app
-          path: release.zip
+ - name: Set up Node@v2
+   with:
+     node-version: '18.x'
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+ -.js
+   uses: actions/setup-node@v2
+   with:
+name: Install system dependencies
+   run: |
+            node-version: '18'
 
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: node-app
+ - name: Install dependencies sudo apt-get update
+     sudo apt-get install -
+   run: |
+     sudo apt-get update
+     sudoy libcairo2-dev libjpeg-dev libpango1.0-dev libgif apt-get install -y libcairo2-dev
+     npm install
 
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_0B0458220E5C4750B2DEC91C387322AE }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_E4FB0F6A92A54A00973000890DF876C7 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F09BE80530D3464497A3E2EFAD2A0660 }}
+ - name: Build app
+   run: npm run build
 
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'poc-quickchart'
-          slot-name: 'Production'
-          package: .
+-dev build-essential g++
+
+ - name: Install dependencies    - name: Deploy to Azure Web App
+   uses: azure/webapps-deploy@v2
+   with:
+     app-name: 'poc-quickchart'
+     slot-name: 'production'
+     publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
