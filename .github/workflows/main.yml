@@ -1,0 +1,38 @@
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: npm install, build, and test
+        run: |
+          npm install --legacy-peer-deps
+          npm run build --if-present
+          npm run test --if-present
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          resource-group: 'poc-quickchart-rg'
+          app-name: 'poc-quickchart'
+          package: .
